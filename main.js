@@ -26,7 +26,7 @@ document.querySelector('body').addEventListener('click', (e)=>{
     fetch('https://jsonplaceholder.typicode.com/users/'+idUsuario)
     .then(resp => resp.json())
     .then(respjson => {
-    console.log(respjson)
+    // console.log(respjson)
         const ficha = document.querySelector('#fichaUsuario')
         
         const html = `
@@ -40,7 +40,38 @@ document.querySelector('body').addEventListener('click', (e)=>{
         <a href="${respjson.website}" class="card-link">${respjson.website}</a>
         `
         document.querySelector('#fichaUsuario').innerHTML = html
-
 })
+fetch('https://jsonplaceholder.typicode.com/posts')
+    .then(resp => resp.json())
+    .then(respjson => {
+        let array = respjson.filter((res) => res.userId==idUsuario)
+        array=array.reverse()
+        console.log(array)
+        const arrayNum = ['One', 'Two', 'Three', 'Four', 'Five']
+        for(i=0; i<5 ; i++){
+            const divAccordion = document.querySelector('#accordionExample')
+            const div = document.createElement('div')
+            div.classList.add('accordion-item')
+            
+            
+            const html = `
+            <h2 class="accordion-header" id="heading${arrayNum[i]}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${arrayNum[i]}" aria-expanded="true" aria-controls="collapse${arrayNum[i]}">
+                  PostId: ${array[i].id}
+                </button>
+              </h2>
+              <div id="collapse${arrayNum[i]}" class="accordion-collapse collapse show" aria-labelledby="heading${arrayNum[i]}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+  
+                  <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                </div>
+              </div>
+            `
+            div.innerHTML = html
+            divAccordion.appendChild(div)
+    
+        }
+    })
+
    }
 })
