@@ -27,21 +27,20 @@ document.querySelector('body').addEventListener('click', (e)=>{
     .then(resp => resp.json())
     .then(respjson => {
     console.log(respjson)
-    for(i=0; i<5 ; i++){
         const ficha = document.querySelector('#fichaUsuario')
-        const nombreSeparado = respjson[i].name.split(' ')
-        const nombre = nombreSeparado[0]
-        const apellido = nombreSeparado[1]
+        
         const html = `
-        <th class="listaUsuario" data-usuarioid=${respjson[i].id} scope="row">${respjson[i].id}</th>
-        <td class="listaUsuario" data-usuarioid=${respjson[i].id} >${nombre}</td>
-        <td class="listaUsuario" data-usuarioid=${respjson[i].id} >${apellido}</td>
-        <td class="listaUsuario" data-usuarioid=${respjson[i].id} >${respjson[i].email}</td>
+        <h5 class="card-title">${respjson.name}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Datos</h6>
+        <p><strong>Username: </strong> ${respjson.username}</p>
+        <p><strong>Email: </strong> ${respjson.email}</p>
+        <p><strong>Phone: </strong> ${respjson.phone}</p>
+        <p><strong>Address: </strong> ${respjson.address.street} ${respjson.address.suite}, ${respjson.address.zipcode}, ${respjson.address.city}</p>
+        <p><strong>Company: </strong> ${respjson.company.name}, ${respjson.company.bs}</p>
+        <a href="${respjson.website}" class="card-link">${respjson.website}</a>
         `
-        tr.innerHTML = html
-        tbody.appendChild(tr)
+        document.querySelector('#fichaUsuario').innerHTML = html
 
-    }
 })
    }
 })
