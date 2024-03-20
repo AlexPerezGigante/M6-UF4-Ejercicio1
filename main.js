@@ -47,47 +47,60 @@ fetch('https://jsonplaceholder.typicode.com/posts')
         let array = respjson.filter((res) => res.userId==idUsuario)
         array=array.reverse()
         console.log(array)
-        const arrayNum = ['One', 'Two', 'Three', 'Four', 'Five']
+       
         let html = ''
-        const divAccordion = document.querySelector('#accordionExample')
-        for(i=0; i<5 ; i++){
-            
-            if(i==0){
-               html += `
-               <div class="accordion-item">
-              <h2 class="accordion-header" id="heading${arrayNum[i]}">
-                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${arrayNum[i]}" aria-expanded="true" aria-controls="collapse${arrayNum[i]}">
-                    PostId: ${array[i].id}
-                  </button>
-                </h2>
-                <div id="collapse${arrayNum[i]}" class="accordion-collapse collapse show" aria-labelledby="heading${arrayNum[i]}" data-bs-parent="#accordionExample">
-                  <div class="accordion-body">
-    
-                    <strong>${array[i].title}.</strong> ${array[i].body}.
-                  </div>
-                </div>
-              `
-              
-            }else{
-               html += `
-              <h2 class="accordion-header" id="heading${arrayNum[i]}">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${arrayNum[i]}" aria-expanded="false" aria-controls="collapse${arrayNum[i]}">
-                    PostId: ${array[i].id}
-                  </button>
-                </h2>
-                <div id="collapse${arrayNum[i]}" class="accordion-collapse collapse " aria-labelledby="heading${arrayNum[i]}" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-    
-                <strong>${array[i].title}.</strong> ${array[i].body}.
-              </div>
-                </div>
-              `
-            }
-          
-        }
-        html +='</div>'
-        divAccordion.innerHTML = html
+        const ol = document.querySelector('.list-group-numbered')
+        
+            let comments = ''
+            fetch('https://jsonplaceholder.typicode.com/comments')
+            .then(resp => resp.json())
+            .then(commentsjson => {
+                for(i=0; i<5 ; i++){
+                comments = commentsjson.filter((comment) => comment.postId==array[i].id).length
+                html += `
+                <li data-postid=${array[i].id} class="list-group-item d-flex justify-content-between align-items-start post">
+                    <div data-postid=${array[i].id} class="ms-2 me-auto post">
+                        <div data-postid=${array[i].id} class="fw-bold post">${array[i].title}</div>
+                            ${array[i].body}
+                            </div>
+                        <span data-postid=${array[i].id} class=" post badge bg-primary rounded-pill">${comments}</span>
+                </li>
+                 `
+                }
+                comentarios(array[i].id)
+                ol.innerHTML = html
+            }) 
     })
-
+   }
+   if(e.target.classList.contains('post')){
+    const id = e.target.dataset.postid
+    comentarios(id)
    }
 })
+
+async function comentarios(postId){
+    try{
+        const res = await fetch('https://jsonplaceholder.typicode.com/comments')
+        const resJ= await res.json()
+        const array = resJ.filter((res) => res.postId==postId)
+
+        let html = '<h3>Comentarios del post</h3>'
+        for (let index = 0; index < array.length; index++) {
+            html+=`
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h5 class="card-title">${array[index].name}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${array[index].email}</h6>
+                    <p class="card-text">${array[index].body}</p> 
+                </div>
+            </div>
+          `
+    
+        }
+        document.querySelector('.comentariosPost').innerHTML = html
+        
+    }
+    catch{
+        console.log(error)
+    }
+}
